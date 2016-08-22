@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>input stepper examples</title>
+
+	<link href="style.css" media="all" rel="stylesheet" />
+</head>
+<body>
+
+	<h1>jquery.stepper.js</h1>
+
+	<div style="width:150px">
+		<div class="stepper" id="stepper_1">
+		  <div class="stepper-progress"></div>
+		  <input type="text" class="stepper-number" min="10" max="90">
+		</div>
+
+		<br>
+		  
+		<div class="stepper" id="stepper_2">
+		  <div class="stepper-progress"></div>
+		  <input type="text" class="stepper-number">
+		</div> 
+
+		<br>
+		  
+		<div class="stepper" id="stepper_3">
+		  <div class="stepper-progress"></div>
+		  <input type="text" class="stepper-number">
+		</div> 
+
+	</div>
+
+	<hr>
+
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="jquery.stepper.js"></script>
+	<script>
+		$(function () {
+			// Document ready
+			
+			$('#stepper_1').stepper();
+			$('#stepper_2').stepper();
+
+			$('#stepper_3').stepper({
+				selectorProgressBar: '.stepper-progress',
+				selectorInputNumber: '.stepper-number',
+				classNameChanging: 'is-changing',
+				decimals: 2,
+				unit: 'px',
+				initialValue: 50,
+				min: -200,
+				max: 200,
+				stepSize: 5
+			});
+
+		});
+	</script>
+</body>
+
+</html>

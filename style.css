@@ -1,0 +1,59 @@
+* {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+div {
+  display: block;
+}
+
+.stepper {
+  position: relative;
+  width: 100%;
+  height: 30px;
+  background: #4e4e4e;
+  border: 1px solid #292929;
+  cursor: col-resize;
+}
+
+.stepper .stepper-number:focus {
+  outline: 1px solid #1baee1;
+  //cursor: text
+}
+
+.stepper-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: rgba(255, 255, 255, 0.2);
+  -webkit-transform-origin: 0 0;
+  -ms-transform-origin: 0 0;
+  transform-origin: 0 0;
+  -webkit-transition: background-color 0.1s linear;
+  transition: background-color 0.1s linear;
+}
+
+.stepper-number {
+  position: relative;
+  width: 100%;
+  height: 28px;
+  line-height: 28px;
+  padding: 0 6px;
+  color: #fff;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  outline-offset: 0;
+  cursor: col-resize;
+  z-index: 2;
+}
+
+.stepper.is-changing .stepper-progress {
+  background-color: #1baee1;
+}
+
+.stepper.is-scrubbing {
+  background: rgba(255, 255, 255, 0.8)
+}

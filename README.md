@@ -44,7 +44,7 @@ $(function () {
 </div>
 ```
 
-Call the input stepper plugin on the desired selector
+Override properties like the input stepper plugin on the desired selector
 
 ```javascript
 $('#stepper_3').stepper({

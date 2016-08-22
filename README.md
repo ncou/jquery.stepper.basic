@@ -69,6 +69,7 @@ $('.input-stepper').inputStepper({
 
 	// Values in the markup always overwrite this settings
 	// min and max value can be overridden with the attribute on the input text
+	// if there is no initial value defined, the plugin take the max value
 	initialValue: null,
 	min: 0,
 	max: 100
@@ -83,10 +84,10 @@ $('.input-stepper').inputStepper({
 	classNameChanging: 'is-changing',
 
 	// Number of decimals to display
-	decimals: 2,
+	decimals: 0,
 
 	// unit to concatenate with the value result
-	unit: 'px',
+	unit: '%',
 
 	// Step used to increaste the progress bar.
 	// Increase this value if you have a big range. Reduce the value (ex : .25) if you have a small range

@@ -33,7 +33,7 @@
 		init: function () {
 
 			// local variable
-			this.curDown = !0;
+			this.curDown = false;
 			this.mouseDownX = 0;
 			this.mouseDownValue = 0;
 
@@ -50,6 +50,7 @@
 			this.setValue(this.initialValue);
 
 			// Bind events
+			this.$input.on('keydown', this.onKeyPress.bind(this) );
 			this.$input.on('blur', this.onBlur.bind(this) );
 			this.$input.on('change keyup paste input', this.onChange.bind(this) );
 			this.$el.on('mousedown', this.onMouseDown.bind(this) );
@@ -78,7 +79,7 @@
 
 		onMouseMove: function (e) {
 
-			if (this.curDown === !1) {
+			if (this.curDown === true) {
 				var t = e.clientX - this.mouseDownX;
 				this.setValue(this.mouseDownValue + t * this.options.stepSize);
 			}
@@ -94,11 +95,17 @@
 		},
 
 		onBlur: function (e) {
-
 			this._changeEnd();
 			this.setValue(this.getValue());
 
 			return this;
+		},
+
+		onKeyPress: function (e) {
+			// key press == 'Enter' we exit the input field
+			if (e.keyCode === 13) {
+              this.$input.blur();
+            }
 		},
 
 		getValue: function () {
@@ -140,17 +147,14 @@
 		},
 
 		_changeStart: function() {
-			this.curDown = !1;
-			this.$el.addClass("is-changing");
+			this.curDown = true;
+			this.$el.addClass(this.options.classNameChanging);
 		},
 
 		_changeEnd: function() {
-			this.curDown = !0;
-			this.$el.removeClass("is-changing");
+			this.curDown = false;
+			this.$el.removeClass(this.options.classNameChanging);
 		},
-
-		
-
 		
 	};
 

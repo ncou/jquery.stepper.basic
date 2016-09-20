@@ -51,6 +51,7 @@
 
 			// Bind events
 			this.$input.on('keydown', this.onKeyPress.bind(this) );
+			this.$input.on('blur', this.onBlur.bind(this) );
 			this.$input.on('paste input', this.onChange.bind(this) );
 			this.$el.on('mousedown', this.onMouseDown.bind(this) );
 			$(document).on('mouseup', this.onMouseUp.bind(this) );
@@ -92,10 +93,16 @@
 			return this;
 		},
 
+		onBlur: function (e) {
+			this._changeEnd();
+			this.setValue(this.getValue());
+
+			return this;
+		},
+
 		onKeyPress: function (e) {
 			// key press == 'Enter' we exit the input field
 			if (e.keyCode === 13) {
-			  this.setValue(this.getValue());
               this.$input.blur();
             }
 		},

@@ -51,8 +51,7 @@
 
 			// Bind events
 			this.$input.on('keydown', this.onKeyPress.bind(this) );
-			this.$input.on('blur', this.onBlur.bind(this) );
-			this.$input.on('change keyup paste input', this.onChange.bind(this) );
+			this.$input.on('paste input', this.onChange.bind(this) );
 			this.$el.on('mousedown', this.onMouseDown.bind(this) );
 			$(document).on('mouseup', this.onMouseUp.bind(this) );
 			$(document).on('mousemove', this.onMouseMove.bind(this) );
@@ -88,15 +87,7 @@
 		},
 
 		onChange: function (e) {
-		    var r = this._valueToPercent(this.getValue()) / 100;
-		    this.$progress.css("transform", "scaleX(" + r + ")");
-
-			return this;
-		},
-
-		onBlur: function (e) {
-			this._changeEnd();
-			this.setValue(this.getValue());
+		    this._updateProgress(this.getValue());
 
 			return this;
 		},
@@ -104,6 +95,7 @@
 		onKeyPress: function (e) {
 			// key press == 'Enter' we exit the input field
 			if (e.keyCode === 13) {
+			  this.setValue(this.getValue());
               this.$input.blur();
             }
 		},
@@ -124,10 +116,16 @@
 		    n += this.options.unit;
 		    this.$input.val(n);
 
-		    var r = this._valueToPercent(value) / 100;
-		    this.$progress.css("transform", "scaleX(" + r + ")")
+		    this._updateProgress(value);
 
 		    return this;
+		},
+
+		_updateProgress: function (v) {
+			var r = this._valueToPercent(v) / 100;
+		    this.$progress.css("transform", "scaleX(" + r + ")");
+
+		    this.$input.trigger("change");
 		},
 
 		_percentToValue: function (v) {

@@ -37,7 +37,7 @@ $(function () {
 ```html
 <div class="stepper" id="stepper_2">
   <div class="stepper-progress"></div>
-  <input type="text" class="stepper-number" min="10" max="90">
+  <input type="text" class="stepper-number" min="10" max="90" onChange="console.log('changed value =' + this.value);">
 </div>
 ```
 

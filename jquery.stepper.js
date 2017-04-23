@@ -68,7 +68,6 @@
     },
 
     onMouseDown: function(e) {
-
       this.mouseDownX = e.clientX || e.originalEvent.touches[0].clientX;
       this.mouseDownValue = this.getValue();
 
@@ -76,14 +75,10 @@
     },
 
     onMouseUp: function(e) {
-
       this._changeEnd();
-
-      //return this;
     },
 
     onMouseMove: function(e) {
-
       if (this.curDown === true) {
         var t = (e.clientX || e.originalEvent.touches[0].clientX) - this.mouseDownX;
         this.setValue(this.mouseDownValue + t * this.settings.stepSize);

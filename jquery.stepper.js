@@ -60,21 +60,17 @@
 			this.$input.on( 'keydown', this.onKeyPress.bind(this) );
 			this.$input.on( 'blur', this.onBlur.bind(this) );
 			this.$input.on( 'paste input', this.onChange.bind(this) );
-			this.$el.on( 'mousedown', this.onMouseDown.bind(this) );
-			$(document).on( 'mouseup', this.onMouseUp.bind(this) );
-			$(document).on( 'mousemove', this.onMouseMove.bind(this) );
-
-			//return this;
+			this.$el.on( 'mousedown touchstart', this.onMouseDown.bind(this) );
+			$(document).on( 'mouseup touchend', this.onMouseUp.bind(this) );
+			$(document).on( 'mousemove touchmove', this.onMouseMove.bind(this) );
 		},
 
 		onMouseDown: function (e) {
 
-			this.mouseDownX = e.clientX;
+			this.mouseDownX = e.clientX || e.originalEvent.touches[0].clientX;
 			this.mouseDownValue = this.getValue();
 
 			this._changeStart();
-
-			//return this;
 		},
 
 		onMouseUp: function (e) {
@@ -87,24 +83,18 @@
 		onMouseMove: function (e) {
 
 			if (this.curDown === true) {
-				var t = e.clientX - this.mouseDownX;
+				var t = (e.clientX || e.originalEvent.touches[0].clientX) - this.mouseDownX;
 				this.setValue(this.mouseDownValue + t * this.settings.stepSize);
 			}
-
-			//return this;
 		},
 
 		onChange: function (e) {
 		    this._updateProgress(this.getValue());
-
-			//return this;
 		},
 
 		onBlur: function (e) {
 			this._changeEnd();
 			this.setValue(this.getValue());
-
-			//return this;
 		},
 
 		onKeyPress: function (e) {
@@ -131,8 +121,6 @@
 		    this.$input.val(n);
 
 		    this._updateProgress(value);
-
-		    //return this;
 		},
 
 		_updateProgress: function (v) {

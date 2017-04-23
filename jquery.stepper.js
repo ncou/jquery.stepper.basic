@@ -1,4 +1,5 @@
 // jquery.stepper.js
+// https://github.com/ncou/jquery.stepper.basic
 // ------------------------------------------------------
 // Author: NCOU
 //
@@ -15,7 +16,7 @@
 			classNameChanging: 'is-changing',
 			decimals: 0,
 			unit: '%',
-			initialValue: null,
+			initialValue: '',
 			min: 0,
 			max: 100,
 			stepSize: 1
@@ -51,8 +52,8 @@
 			// init values
 			this.min = this.$input.attr('min') || this.settings.min;
 			this.max = this.$input.attr('max') || this.settings.max;
-
-			this.initialValue = this.getValue() || this.settings.initialValue || this.max;
+      
+      this.initialValue = this.$input.val() || (this.settings.initialValue !== "" ? this.settings.initialValue : this.max);
 
 			this.setValue(this.initialValue);
 

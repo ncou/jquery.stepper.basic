@@ -1,5 +1,6 @@
 # jquery.stepper.js
 > Lightweight input stepper. [Check it out on Codepen](http://codepen.io/anon/pen/xRvBVq?editors=0010)
+> Lightweight input stepper. [Check it out on Codepen (with touch events for mobile)](http://codepen.io/anon/pen/zwBemg?editors=0011)
 
 ## Features
 - Works on input type="text"

@@ -16,6 +16,10 @@ div {
   cursor: col-resize;
 }
 
+.stepper:hover {
+    background: #5a5a5a;
+}
+
 .stepper .stepper-number:focus {
   outline: 1px solid #1baee1;
   //cursor: text

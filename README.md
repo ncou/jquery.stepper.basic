@@ -74,3 +74,6 @@ $('#stepper_3').stepper({
 	stepSize: 1
 });
 ```
+
+## Licence
+This plugin is under MIT Licence.

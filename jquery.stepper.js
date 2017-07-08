@@ -5,22 +5,19 @@
 //
 // the semi-colon before function invocation is a safety net against concatenated
 // scripts and/or other plugins which may not be closed properly.
-;
 (function($, window, document, undefined) {
-
   "use strict";
-
   var pluginName = "stepper",
     defaults = {
-      selectorProgressBar: '.stepper-progress',
-      selectorInputNumber: '.stepper-number',
-      classNameChanging: 'is-changing',
+      selectorProgressBar: ".stepper-progress",
+      selectorInputNumber: ".stepper-number",
+      classNameChanging: "is-changing",
+      value: "",
       decimals: 0,
-      unit: '%',
-      initialValue: '',
       min: 0,
       max: 100,
-      stepSize: 1
+      step: 1,
+      unit: "%"
     };
 
   // The actual plugin constructor
@@ -37,13 +34,11 @@
 
   // Avoid Plugin.prototype conflicts
   $.extend(Plugin.prototype, {
-
     init: function() {
-
       // local variable
-      this.curDown = false;
-      this.mouseDownX = 0;
-      this.mouseDownValue = 0;
+      this._curDown = false;
+      this._mouseDownX = 0;
+      this._mouseDownValue = 0;
 
       // Cache elements
       this.$el = $(this.element);
@@ -51,25 +46,33 @@
       this.$progress = this.$el.find(this.settings.selectorProgressBar);
 
       // init values
-      this.min = this.$input.attr('min') || this.settings.min;
-      this.max = this.$input.attr('max') || this.settings.max;
+      this.decimals = this.$input.attr("decimals") || this.settings.decimals;
+      this.min = this.$input.attr("min") || this.settings.min;
+      this.max = this.$input.attr("max") || this.settings.max;
+      this.step = this.$input.attr("step") || this.settings.step;
+      this.unit = this.$input[0].hasAttribute("unit")
+        ? this.$input.attr("unit")
+        : this.settings.unit;
 
-      this.initialValue = this.$input.val() || (this.settings.initialValue !== "" ? this.settings.initialValue : this.max);
+      this.value =
+        this.$input.val() ||
+        (this.settings.value !== "" ? this.settings.value : this.max);
 
-      this.setValue(this.initialValue);
+      this.setValue(this.value);
 
       // Bind events
-      this.$input.on('keydown', this.onKeyPress.bind(this));
-      this.$input.on('blur', this.onBlur.bind(this));
-      this.$input.on('paste input', this.onChange.bind(this));
-      this.$el.on('mousedown touchstart', this.onMouseDown.bind(this));
-      $(document).on('mouseup touchend', this.onMouseUp.bind(this));
-      $(document).on('mousemove touchmove', this.onMouseMove.bind(this));
+      this.$input.on("keydown", this.onKeyPress.bind(this));
+      this.$input.on("blur", this.onBlur.bind(this));
+      this.$input.on("paste input", this.onChange.bind(this));
+      this.$el.on("mousedown touchstart", this.onMouseDown.bind(this));
+      this.$el.on("wheel", this.onMouseWheel.bind(this));
+      $(document).on("mouseup touchend", this.onMouseUp.bind(this));
+      $(document).on("mousemove touchmove", this.onMouseMove.bind(this));
     },
 
     onMouseDown: function(e) {
-      this.mouseDownX = e.clientX || e.originalEvent.touches[0].clientX;
-      this.mouseDownValue = this.getValue();
+      this._mouseDownX = e.clientX || e.originalEvent.touches[0].clientX;
+      this._mouseDownValue = this.getValue();
 
       this._changeStart();
     },
@@ -79,9 +82,20 @@
     },
 
     onMouseMove: function(e) {
-      if (this.curDown === true) {
-        var t = (e.clientX || e.originalEvent.touches[0].clientX) - this.mouseDownX;
-        this.setValue(this.mouseDownValue + t * this.settings.stepSize);
+      if (this._curDown === true) {
+        var t =
+          (e.clientX || e.originalEvent.touches[0].clientX) - this._mouseDownX;
+        this.setValue(this._mouseDownValue + t * this.step);
+      }
+    },
+
+    onMouseWheel: function(e) {
+      // prevent [wheel increase and mousemove increase] and [wheel increase] if the input field is not focused
+      if (this._curDown === false && this.$input.is(":focus")) {
+        e.preventDefault();
+        // delta is 1 if scroll up, or -1 if scroll down
+        var d = e.originalEvent.deltaY < 0 ? 1 : -1;
+        this.setValue(this.getValue() + d * this.step);
       }
     },
 
@@ -95,7 +109,7 @@
     },
 
     onKeyPress: function(e) {
-      // key press == 'Enter' we exit the input field
+      // exit the input field if key pressed is 'Enter'
       if (e.keyCode === 13) {
         this.$input.blur();
       }
@@ -112,9 +126,9 @@
       value = this._roundValue(value);
 
       var n = value;
-      n = n.toFixed(this.settings.decimals);
+      n = n.toFixed(this.decimals);
 
-      n += this.settings.unit;
+      n += this.unit;
       this.$input.val(n);
 
       this._updateProgress(value);
@@ -137,33 +151,29 @@
     },
 
     _roundValue: function(v) {
-      var nbrDecimals = 2;
+      var maxDecimals = 2;
 
-      var t = Math.pow(10, nbrDecimals);
-      return Math.round(v * t) / t
+      var t = Math.pow(10, maxDecimals);
+      return Math.round(v * t) / t;
     },
 
     _changeStart: function() {
-      this.curDown = true;
+      this._curDown = true;
       this.$el.addClass(this.settings.classNameChanging);
     },
 
     _changeEnd: function() {
-      this.curDown = false;
+      this._curDown = false;
       this.$el.removeClass(this.settings.classNameChanging);
-    },
-
+    }
   });
 
-  // A really lightweight plugin wrapper around the constructor,
-  // preventing against multiple instantiations
+  // A lightweight plugin wrapper around the constructor, preventing against multiple instantiations
   $.fn[pluginName] = function(options) {
     return this.each(function() {
       if (!$.data(this, "plugin-" + pluginName)) {
-        $.data(this, "plugin-" + pluginName,
-          new Plugin(this, options));
+        $.data(this, "plugin-" + pluginName, new Plugin(this, options));
       }
     });
   };
-
 })(jQuery, window, document);

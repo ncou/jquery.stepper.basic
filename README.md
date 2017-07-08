@@ -1,5 +1,5 @@
 # jquery.stepper.js
-> Lightweight input stepper. [Check it out on Codepen (with touch events for mobile)](http://codepen.io/anon/pen/zwBemg?editors=0011)
+> Lightweight input stepper. [Check it out on Codepen (with touch events for mobile)](https://codepen.io/anon/pen/qjJbMr?editors=0011)
 
 ## Features
 - Works on input type="text"
@@ -35,9 +35,16 @@ $(function () {
 ## Advanced usage
 
 ```html
-<div class="stepper" id="stepper_2">
+<div class="stepper">
   <div class="stepper-progress"></div>
   <input type="text" class="stepper-number" min="10" max="90" onChange="console.log('changed value =' + this.value);">
+</div>
+```
+Another example :
+```html
+<div class="stepper">
+  <div class="stepper-progress"></div>
+  <input type="text" class="stepper-number" unit="px" min="10" max="90" step="5" value="50" onChange="console.log('changed value =' + this.value);">
 </div>
 ```
 
@@ -50,10 +57,10 @@ $('#stepper_3').stepper({
 	classNameChanging: 'is-changing',
 	decimals: 2,
 	unit: 'px',
-	initialValue: 50,
+	value: 50,
 	min: -200,
 	max: 200,
-	stepSize: 5
+	step: 5
 });
 
 ```
@@ -68,10 +75,10 @@ $('#stepper_3').stepper({
 	classNameChanging: 'is-changing',
 	decimals: 0,
 	unit: '%',
-	initialValue: null,
+	value: '',
 	min: 0,
 	max: 100,
-	stepSize: 1
+	step: 1
 });
 ```
 

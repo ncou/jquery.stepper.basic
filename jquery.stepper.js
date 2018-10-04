@@ -72,16 +72,16 @@
 
     onMouseDown: function(e) {
       this._mouseDownX = e.clientX || e.originalEvent.touches[0].clientX;
-      this._mouseDownValue = this.getValue();
-
       this._changeStart();
     },
 
     onMouseUp: function(e) {
+      if ( ! $.isNumeric(this.getValue()) ) { return false; }
       this._changeEnd();
     },
 
     onMouseMove: function(e) {
+      if ( ! $.isNumeric(this.getValue()) ) { return false; }
       if (this._curDown === true) {
         var t =
           (e.clientX || e.originalEvent.touches[0].clientX) - this._mouseDownX;
@@ -90,6 +90,7 @@
     },
 
     onMouseWheel: function(e) {
+      if ( ! $.isNumeric(this.getValue()) ) { return false; }
       // prevent [wheel increase and mousemove increase] and [wheel increase] if the input field is not focused
       if (this._curDown === false && this.$input.is(":focus")) {
         e.preventDefault();
@@ -116,21 +117,33 @@
     },
 
     getValue: function() {
-      return parseFloat(this.$input.val()) || 0;
+      var value = this.$input.val();
+      
+      if (!$.isNumeric(value)) {
+        return value;
+      }
+      
+      return parseFloat(value) || 0;
     },
 
     setValue: function(amount) {
       var value;
+      
+      if ($.isNumeric(amount)) {
+          value = Math.max(Math.min(amount, this.max), this.min);
+          value = this._roundValue(value);
 
-      value = Math.max(Math.min(amount, this.max), this.min);
-      value = this._roundValue(value);
+          var n = value;
+          n = n.toFixed(this.decimals);
 
-      var n = value;
-      n = n.toFixed(this.decimals);
+          n += this.unit;
+          this.$input.val(n);
+        
+          this._updateProgress(value);
+          return;
+      }
 
-      n += this.unit;
-      this.$input.val(n);
-
+      this.$input.val('auto');
       this._updateProgress(value);
     },
 
